@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Kalkulator.SimpleKalkulator">
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtA"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:hint="Angka Pertama"
+        />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtB"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/txtA"
+        android:hint="Angka Kedua"
+        />
+
+    <GridLayout
+        android:id="@+id/gl_btnComplex"
+        android:layout_below="@id/txtB"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"
+            android:id="@+id/btn_tambah"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"
+            android:id="@+id/btn_kurang"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"
+            android:id="@+id/btn_kali"
+            />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"
+            android:id="@+id/btn_bagi"
+            />
+
+    </GridLayout>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtC"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:layout_below="@id/gl_btnComplex"
+        android:hint="Hasil"
+        />
+
+</RelativeLayout>
