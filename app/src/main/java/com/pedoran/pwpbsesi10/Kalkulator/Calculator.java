@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -11,58 +12,116 @@ import android.widget.TextView;
 import com.pedoran.pwpbsesi10.MainActivity;
 import com.pedoran.pwpbsesi10.R;
 
-public class Calculator extends AppCompatActivity implements View.OnClickListener{
-    TextView tvHasil;
+import java.util.regex.Pattern;
+
+public class Calculator extends AppCompatActivity{
+    TextView tvHasil,tvOperasi;
+    String sentence = "";
+    String operator = "";
+    String result = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
-
-        Button btnAC = findViewById(R.id.btn_calc_ac);
-        Button btn1 = findViewById(R.id.btn_calc1);
-        Button btn2 = findViewById(R.id.btn_calc2);
-        Button btn3 = findViewById(R.id.btn_calc3);
-        Button btn4 = findViewById(R.id.btn_calc4);
-        Button btn5 = findViewById(R.id.btn_calc5);
-        Button btn6 = findViewById(R.id.btn_calc6);
-        Button btn7 = findViewById(R.id.btn_calc7);
-        Button btn8 = findViewById(R.id.btn_calc8);
-        Button btn9 = findViewById(R.id.btn_calc9);
-        Button btn0 = findViewById(R.id.btn_calc0);
-        Button btnPlus = findViewById(R.id.btn_calc_plus);
-        Button btnMinus = findViewById(R.id.btn_calc_minus);
-        Button btnDiv = findViewById(R.id.btn_calc_div);
-        Button btnMulti = findViewById(R.id.btn_calc_multi);
-        Button btnDot = findViewById(R.id.btn_calc_dot);
-
-        initbtn(btnAC);
-        initbtn(btn0);
-        initbtn(btn1);
-        initbtn(btn2);
-        initbtn(btn3);
-        initbtn(btn4);
-        initbtn(btn5);
-        initbtn(btn6);
-        initbtn(btn7);
-        initbtn(btn8);
-        initbtn(btn9);
-        initbtn(btnMulti);
-        initbtn(btnAC);
-        initbtn(btnAC);
-        initbtn(btnAC);
-        initbtn(btnAC);
-
-
-
+        tvHasil = findViewById(R.id.tv_calc_result);
+        tvOperasi = findViewById(R.id.tv_calc_sentence);
+        tvOperasi.setText(sentence);
     }
 
-    @Override
-    public void onClick(View view) {
-
+    public void updateSentence(){
+        tvOperasi.setText(sentence);
     }
 
-    private void initbtn(Button btn){
-        btn.setOnClickListener(this);
+    public void clear(){
+        sentence = "";
+        operator = "";
+        result = "";
+    }
+
+    public void onClickNumber(View v){
+        Button number = (Button) v;
+        sentence += number.getText();
+        updateSentence();
+    }
+
+    public void onClickOperator(View v){
+        if (sentence == "") return;
+        Button operate = (Button) v;
+
+        if(result != ""){
+            String temp = result;
+            clear();
+            sentence = temp;
+        }
+
+        if(operator != ""){
+            Log.d("Test",""+sentence.charAt(sentence.length()-1));
+            if(isOperator(sentence.charAt(sentence.length()-1))){
+                sentence = sentence.replace(sentence.charAt(sentence.length()-1),operate.getText().charAt(0));
+                updateSentence();
+                return;
+            }else{
+                //jika operasi nya lebih dari satu
+                getResult();
+                sentence = result;
+                result = "";
+            }
+            operator = operate.getText().toString();
+        }
+
+        sentence += operate.getText();
+        operator = operate.getText().toString();
+        updateSentence();
+    }
+
+    public void onClickAC(View v){
+        clear();
+        updateSentence();
+    }
+
+    public void onClickEqual(View v){
+        if(sentence == "") return;
+        if(!getResult()) return;
+        tvOperasi.setText(sentence);
+        tvHasil.setText(result);
+    }
+
+    public void onClickDot(View v){
+        sentence += ".";
+        updateSentence();
+    }
+
+    public double calculate(String num1,String num2,String op){
+        switch (op){
+            case "+": return Double.valueOf(num1) + Double.valueOf(num2);
+            case "-": return Double.valueOf(num1) - Double.valueOf(num2);
+            case "*": return Double.valueOf(num1) * Double.valueOf(num2);
+            case "/": try{
+                //entah kenapa kalo ga diginiin malah error
+                return Double.valueOf(num1) / Double.valueOf(num2);
+            }catch (Exception e){
+                Log.d("ERROR",e.getMessage());
+            }
+            default: return -1;
+        }
+    }
+
+    public boolean getResult(){
+        if(operator == "") return false;
+        String[] operation = sentence.split(Pattern.quote(operator));
+        if(operation.length < 2) return false;
+        result = String.valueOf(calculate(operation[0],operation[1],operator));
+        return true;
+    }
+
+    public boolean isOperator(char op){
+        switch (op){
+            case '+':
+            case '-':
+            case '*':
+            case '/': return true;
+            default: return false;
+        }
     }
 }
